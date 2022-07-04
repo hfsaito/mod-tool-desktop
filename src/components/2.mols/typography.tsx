@@ -70,6 +70,14 @@ export const P = styled.p<TypographyProps>`
   ${handleStyleCommon}
 `;
 
+export const Pre = styled.pre<TypographyProps>`
+  color: ${props => Style.color[props.color ?? 'body'].on};
+  font-size: ${props => Style.typography.size[props.size ?? 'xs']}px;
+  font-family: ${Style.typography.font};
+  margin: 0 0 ${Style.space.md}px 0;
+  ${handleStyleCommon}
+`;
+
 type LinkProps = TypographyProps & {
   readonly active?: boolean;
   readonly muted?: boolean;

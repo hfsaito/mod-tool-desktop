@@ -1,1 +1,1 @@
-export * from './org-example';
+export * from './twitch-list-channels';

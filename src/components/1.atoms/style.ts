@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 
-const TYPOGRAPHY_BASE = 16;
+const TYPOGRAPHY_BASE = 14;
 const SPACE_BASE = 8;
 
 const breakpoint = {
@@ -77,7 +77,7 @@ export const Style: StyleType = {
       lg: TYPOGRAPHY_BASE * 3,
       xl: TYPOGRAPHY_BASE * 4
     },
-    font: 'sans-serif'
+    font: 'Inter, Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif'
   },
   space: {
     none: 0,
@@ -114,8 +114,8 @@ export const Style: StyleType = {
       background: 'whtie'
     },
     body: {
-      on: 'black',
-      background: 'white'
+      on: 'white',
+      background: '#1f1f23'
     },
     muted: {
       on: 'lightgray',

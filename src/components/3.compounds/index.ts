@@ -1,1 +1,1 @@
-export * from './compound-example';
+export * from './twitch-list-channel-item';
