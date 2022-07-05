@@ -1,8 +1,8 @@
 import * as React from "react";
-
-import { P } from "../2.mols";
-import { Channel } from "@utils";
 import styled, { css } from "styled-components";
+
+import { Button } from "@components/2.mols";
+import { Channel, displayNumber } from "@utils";
 
 interface ListChannelItemProps {
   channel: Channel;
@@ -30,12 +30,12 @@ const Container = styled.a`
 `;
 const Container2 = styled.div`
   display: flex;
-  width: 100%;
+  justify-content: space-between;
+  width: calc(100% - 30px);
 `;
 const Container3 = styled.div`
   margin-left: 10px;
   overflow: hidden;
-  width: 100%;
 `;
 const Container4 = styled.div``;
 const Container5 = styled.div`
@@ -58,6 +58,9 @@ const Name = styled.p`
   color: #dedee3;
   line-height: 1.2;
   margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 const Game = styled.p`
   font-family: Inter, Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -66,6 +69,9 @@ const Game = styled.p`
   color: #adadb8;
   line-height: 1.2;
   margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 `;
 const Status = styled.div`
   background-color: #eb0400;
@@ -97,24 +103,6 @@ const Container6 = styled.div`
   display: flex;
 `;
 
-const Button = styled.button`
-  background-color: #323234;
-  border: none;
-  color: #efeff1;
-  font-family: Inter, Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 4px;
-  margin: auto 0;
-  margin-left: auto;
-  line-height: 19.5px;
-  padding: 5px 8px;
-
-  &:hover {
-    background-color: #3e3e40;
-  }
-`;
-
 export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel }) => {
   return (
     <Container6>
@@ -135,7 +123,7 @@ export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel }) => 
                 <>
                   <Status />
                   <ViewCount>
-                    {channel.viewCount}
+                    {displayNumber(channel.viewCount ?? 0)}
                   </ViewCount>
                 </>
               ) : (
