@@ -11,6 +11,11 @@ type HomePageType = React.FC & {
   Main: React.FC;
 };
 
+const Main = styled.main`
+  background-color: ${() => Style.color.body.background};
+  overflow: hidden;
+  height: 100%;
+`;
 const Button = styled.button`
   background-color: #323234;
   border: none;
@@ -29,7 +34,7 @@ const Button = styled.button`
   }
 `;
 
-export const HomePage: HomePageType = () => {
+export const HomePage: React.FC = () => {
   useStore(gankListStore);
 
   const refresh = React.useCallback(() => {
@@ -40,7 +45,7 @@ export const HomePage: HomePageType = () => {
   }, []);
 
   return (
-    <HomePage.Main>
+    <Main>
       <Container>
         <H1>Gank list</H1>
         <Button onClick={refresh} disabled={gankListStore.state.loading}>
@@ -53,11 +58,6 @@ export const HomePage: HomePageType = () => {
           </>
         )}
       </Container>
-    </HomePage.Main>
+    </Main>
   );
 }
-
-HomePage.Main = styled.main`
-  background-color: ${() => Style.color.body.background};
-  overflow: hidden;
-`;

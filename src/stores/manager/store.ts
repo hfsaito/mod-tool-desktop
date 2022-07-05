@@ -1,5 +1,10 @@
+import { merge } from 'lodash';
+
 type Listener = () => void;
-type Updater<S> = Partial<S> | ((prevValue: S) => Partial<S>)
+type DeepPartial<T> = T extends object ? {
+  [P in keyof T]?: DeepPartial<T[P]>;
+} : T;
+type Updater<S> = DeepPartial<S> | ((prevValue: S) => DeepPartial<S>);
 
 class StoreCounter {
   private static counter = 0;
@@ -17,7 +22,7 @@ export class Store<State> {
   }
 
   setState = (updater: Updater<State>): void => {
-    let nextState: Partial<State>;
+    let nextState: DeepPartial<State>;
 
     if (updater instanceof Function) {
       nextState = updater(this.state);
@@ -29,7 +34,11 @@ export class Store<State> {
       return;
     }
 
-    this.state = Object.assign({}, this.state, nextState);
+    if (typeof nextState === 'object') {
+      this.state = merge(this.state, nextState);
+    } else {
+      this.state = nextState as State;
+    }
     this._listeners.every(listener => listener());
   }
 
