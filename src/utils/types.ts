@@ -1,7 +1,7 @@
 export type Channel = {
   name: string;
-  avatar: string;
-  isLive: boolean;
+  status: 'offline' | 'online' | 'not-found';
+  avatar?: string;
   game?: string;
   viewCount?: number;
 }

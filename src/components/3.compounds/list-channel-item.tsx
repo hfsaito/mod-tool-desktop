@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled, { css } from "styled-components";
 
-import { Button } from "@components/2.mols";
+import { Button, HSpace } from "@components/2.mols";
 import { Channel, displayNumber } from "@utils";
 
 interface ListChannelItemProps {
@@ -42,11 +42,11 @@ const Container5 = styled.div`
   display: flex;
   align-items: center;
 `;
-const Avatar = styled.img<{isLive: boolean}>`
+const Avatar = styled.img<{status: Channel['status']}>`
   width: 30px;
   height: 30px;
   border-radius: 9999px;
-  ${({ isLive }) => !isLive && css`
+  ${({ status }) => status !== 'online' && css`
     filter: grayscale(100%) contrast(85%);
     opacity: .8;
   `}
@@ -81,16 +81,7 @@ const Status = styled.div`
   display: inline-block;
   position: relative;
 `;
-const ViewCount = styled.p`
-  font-family: Inter, Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  color: #dedee3;
-  line-height: 19.5px;
-  margin: 0;
-  margin-left: 5px;
-`;
-const Offline = styled.p`
+const Detail = styled.p`
   font-family: Inter, Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   font-weight: 400;
@@ -102,12 +93,23 @@ const Offline = styled.p`
 const Container6 = styled.div`
   display: flex;
 `;
+const ActionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
 export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel }) => {
+  const detail = {
+    'not-found': 'Not found',
+    offline: 'Offline',
+    online: displayNumber(channel.viewCount ?? 0)
+  }[channel.status];
+  
+
   return (
     <Container6>
       <Container href={`https://twitch.tv/${channel.name}`} target='_blank'>
-        <Avatar src={channel.avatar} isLive={channel.isLive} />
+        <Avatar src={channel.avatar} status={channel.status} />
         <Container2>
           <Container3>
             <Name>
@@ -119,27 +121,27 @@ export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel }) => 
           </Container3>
           <Container4>
             <Container5>
-              {channel.isLive ? (
-                <>
-                  <Status />
-                  <ViewCount>
-                    {displayNumber(channel.viewCount ?? 0)}
-                  </ViewCount>
-                </>
-              ) : (
-                <Offline>
-                  Offilne
-                </Offline>
-              )}
+              {channel.status === 'online' && <Status />}
+              <Detail>{detail}</Detail>
             </Container5>
           </Container4>
         </Container2>
       </Container>
-      {channel.isLive && (
+      <ActionsContainer>
+        {channel.status === 'online' && (
+          <>
+            <HSpace />
+            <Button>
+              Raid
+            </Button>
+          </>
+        )}
+        <HSpace />
         <Button>
-          Raid
+          Remove
         </Button>
-      )}
+        <HSpace />
+      </ActionsContainer>
     </Container6>
   );
 }

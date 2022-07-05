@@ -13,6 +13,8 @@
     "paths": {
       "@apis": ["apis"],
       "@apis/*": ["apis/*"],
+      "@assets": ["assets"],
+      "@assets/*": ["assets/*"],
       "@components": ["components"],
       "@components/*": ["components/*"],
       "@pages": ["pages"],
@@ -31,6 +33,7 @@
     "sourceMap": true,
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "electron"
   ]
 }

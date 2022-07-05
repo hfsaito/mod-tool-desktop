@@ -4,6 +4,7 @@ import { Twitch, twitch } from "@apis";
 import { Channel } from "@utils";
 
 import { Store } from "./manager";
+import { ImgUserNotFound } from '@assets';
 
 type TwitchStream = Twitch['Streams']['Get']['Response']['data'][0];
 type TwitchUser = Twitch['Users']['Get']['Response']['data'][0];
@@ -37,22 +38,23 @@ class GankListStore extends Store<ExampleState> {
         }, {});
 
         return chunk
-          .filter(login => {
-            const found = Boolean(userByName[login]);
-            if (!found) {
-              console.warn(`Not found: ${login}`);
-            }
-            return found
-          })
           .map<Channel>(login => {
             const stream: TwitchStream | undefined = streamByName[login];
             const user = userByName[login];
-            console.log(`userName: ${login}\nstream: ${stream}\nuser: ${user}\n`);
+
+            let status: Channel['status'] = 'not-found';
+
+            if (Boolean(user)) {
+              status = 'offline';
+            }
+            if (Boolean(stream)) {
+              status = 'online';
+            }
 
             return {
               name: login,
-              avatar: user.profile_image_url,
-              isLive: Boolean(stream),
+              status,
+              avatar: user?.profile_image_url ?? ImgUserNotFound,
               game: stream?.game_name,
               viewCount: stream?.viewer_count
             };
@@ -65,11 +67,15 @@ class GankListStore extends Store<ExampleState> {
   }
 
   getOnlineChannels() {
-    return this.state.channels.filter(channel => channel.isLive);
+    return this.state.channels.filter(channel => channel.status === 'online');
   }
 
   getOfflineChannels() {
-    return this.state.channels.filter(channel => !channel.isLive);
+    return this.state.channels.filter(channel => channel.status === 'offline');
+  }
+
+  getNotFoundChannels() {
+    return this.state.channels.filter(channel => channel.status === 'not-found');
   }
 }
 

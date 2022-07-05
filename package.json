@@ -4,8 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "webpack serve",
-    "build": "webpack --mode=production",
+    "start": "webpack serve --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,12 +19,14 @@
   },
   "homepage": "https://github.com/hfsaito/mod-tool-desktop#readme",
   "devDependencies": {
+    "@types/file-loader": "5.0.1",
     "@types/lodash": "4.14.182",
     "@types/react": "17.0.44",
     "@types/react-dom": "17.0.15",
     "@types/react-router-dom": "5.3.3",
     "@types/styled-components": "5.1.25",
     "css-loader": "6.7.1",
+    "file-loader": "6.2.0",
     "html-webpack-plugin": "5.5.0",
     "normalize.css": "8.0.1",
     "style-loader": "3.3.1",
@@ -32,7 +34,8 @@
     "typescript": "4.7.4",
     "webpack": "5.72.0",
     "webpack-cli": "4.10.0",
-    "webpack-dev-server": "4.8.1"
+    "webpack-dev-server": "4.8.1",
+    "webpack-merge": "5.8.0"
   },
   "dependencies": {
     "axios": "0.27.2",
