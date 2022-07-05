@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import { ListChannelItem } from "../../components/3.compounds";
-import { Channel } from "../../utils";
+import { ListChannelItem } from "@components/3.compounds";
+import { Channel } from "@utils";
 
 type ListChannelsProps = { channels: Channel[] };
 

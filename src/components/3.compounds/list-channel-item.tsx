@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { P } from "../2.mols";
-import { Channel } from "../../utils";
+import { Channel } from "@utils";
 import styled, { css } from "styled-components";
 
 interface ListChannelItemProps {

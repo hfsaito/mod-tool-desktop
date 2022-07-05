@@ -1,7 +1,7 @@
 import { chunk, flatten, uniq } from 'lodash';
 
-import { Twitch, twitch } from "../apis";
-import { Channel } from "../utils";
+import { Twitch, twitch } from "@apis";
+import { Channel } from "@utils";
 
 import { Store } from "./manager";
 
