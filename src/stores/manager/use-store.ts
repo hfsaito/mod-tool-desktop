@@ -4,10 +4,11 @@ import { StoreContext } from './context';
 import { Store } from './store';
 
 
-export const useStore = <State = unknown>(s: Store<State>): Store<State> => {
+export const useStore = <State = unknown>(s: Store<State>): void => {
   const map = React.useContext(StoreContext);
 
-  const [, setDummy] = React.useState<void>();
+  const [, updateState] = React.useState<{}>();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
   
   const store = React.useMemo(() => {
     const storeFound = map.get(s._id);
@@ -15,12 +16,13 @@ export const useStore = <State = unknown>(s: Store<State>): Store<State> => {
       throw 'Undefined store, forgot to inject the store using Provider';
     }
     return storeFound;
-  }, [s]);
-
-  React.useEffect(() => {
-    store._subscribe(setDummy);
-    return () => store._unsubscribe(setDummy);
   }, []);
 
-  return store;
+  React.useEffect(() => {
+    store._subscribe(() => {
+      console.log('Should update');
+      forceUpdate();
+    });
+    return () => store._unsubscribe(forceUpdate);
+  }, []);
 };

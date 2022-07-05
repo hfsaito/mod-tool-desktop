@@ -1,5 +1,5 @@
 type Listener = () => void;
-type Updater<S> = S | ((prevValue: S) => S)
+type Updater<S> = Partial<S> | ((prevValue: S) => Partial<S>)
 
 class StoreCounter {
   private static counter = 0;
@@ -17,7 +17,7 @@ export class Store<State> {
   }
 
   setState = (updater: Updater<State>): void => {
-    let nextState: State;
+    let nextState: Partial<State>;
 
     if (updater instanceof Function) {
       nextState = updater(this.state);

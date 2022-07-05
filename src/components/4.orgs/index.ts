@@ -1,1 +1,1 @@
-export * from './twitch-list-channels';
+export * from './list-channels';
