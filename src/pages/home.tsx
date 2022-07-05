@@ -38,11 +38,7 @@ export const HomePage: React.FC = () => {
         </ActionsContainer>
         <VSpace />
         {!gankListStore.state.loading && (
-          <>
-            <ListChannels channels={gankListStore.getNotFoundChannels()} />
-            <ListChannels channels={gankListStore.getOnlineChannels()} />
-            <ListChannels channels={gankListStore.getOfflineChannels()} />
-          </>
+          <ListChannels channels={gankListStore.state.channels} />
         )}
       </Container>
     </main>

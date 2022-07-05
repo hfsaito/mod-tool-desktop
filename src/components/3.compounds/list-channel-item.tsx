@@ -3,10 +3,8 @@ import styled, { css } from "styled-components";
 
 import { Button, HSpace } from "@components/2.mols";
 import { Channel, displayNumber } from "@utils";
+import { gankListStore, useStore } from "@stores";
 
-interface ListChannelItemProps {
-  channel: Channel;
-}
 
 const Container = styled.a`
   display: flex;
@@ -90,24 +88,37 @@ const Detail = styled.p`
   margin: 0;
   margin-left: 5px;
 `;
-const Container6 = styled.div`
+const Container6 = styled.div<{status: Channel['status']}>`
   display: flex;
+  order: ${({ status }) => ({
+    'not-found': 1,
+    online: 2,
+    offline: 3
+  }[status])};
 `;
 const ActionsContainer = styled.div`
   display: flex;
   align-items: center;
 `;
 
-export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel }) => {
+interface ListChannelItemProps {
+  channel: Channel;
+  index: number;
+}
+
+export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel, index }) => {
+  useStore(gankListStore);
+
   const detail = {
     'not-found': 'Not found',
     offline: 'Offline',
     online: displayNumber(channel.viewCount ?? 0)
   }[channel.status];
   
+  const remove = React.useCallback(() => gankListStore.removeChannel(index), [index]);
 
   return (
-    <Container6>
+    <Container6 status={channel.status}>
       <Container href={`https://twitch.tv/${channel.name}`} target='_blank'>
         <Avatar src={channel.avatar} status={channel.status} />
         <Container2>
@@ -128,19 +139,19 @@ export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel }) => 
         </Container2>
       </Container>
       <ActionsContainer>
-        {channel.status === 'online' && (
-          <>
-            <HSpace />
-            <Button>
-              Raid
-            </Button>
-          </>
-        )}
         <HSpace />
-        <Button>
+        <Button onClick={remove}>
           Remove
         </Button>
         <HSpace />
+        {channel.status === 'online' && (
+          <>
+            <Button>
+              Raid
+            </Button>
+            <HSpace />
+          </>
+        )}
       </ActionsContainer>
     </Container6>
   );

@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import { isArray, mergeWith } from 'lodash';
 
 type Listener = () => void;
 type DeepPartial<T> = T extends object ? {
@@ -35,7 +35,11 @@ export class Store<State> {
     }
 
     if (typeof nextState === 'object') {
-      this.state = merge(this.state, nextState);
+      this.state = mergeWith(this.state, nextState, (oldValue, newValue) => {
+        if (isArray(oldValue)) {
+          return newValue;
+        }
+      });
     } else {
       this.state = nextState as State;
     }

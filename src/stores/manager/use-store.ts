@@ -19,10 +19,7 @@ export const useStore = <State = unknown>(s: Store<State>): void => {
   }, []);
 
   React.useEffect(() => {
-    store._subscribe(() => {
-      console.log('Should update');
-      forceUpdate();
-    });
+    store._subscribe(forceUpdate);
     return () => store._unsubscribe(forceUpdate);
   }, []);
 };

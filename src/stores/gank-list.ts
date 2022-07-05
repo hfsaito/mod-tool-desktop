@@ -1,4 +1,4 @@
-import { chunk, flatten, uniq } from 'lodash';
+import { chunk, flatten, map, merge, uniq } from 'lodash';
 
 import { Twitch, twitch } from "@apis";
 import { Channel } from "@utils";
@@ -8,6 +8,7 @@ import { ImgUserNotFound } from '@assets';
 
 type TwitchStream = Twitch['Streams']['Get']['Response']['data'][0];
 type TwitchUser = Twitch['Users']['Get']['Response']['data'][0];
+type UserStreamByLogin = { [key: string]: { user: TwitchUser, stream: TwitchStream } };
 
 type ExampleState = {
   channels: Channel[];
@@ -19,51 +20,65 @@ class GankListStore extends Store<ExampleState> {
     super({ channels: [], loading: false });
   }
 
-  async setChannels(userNames: string[]) {
+  async setChannels(displayNames: string[]) {
     this.setState({ loading: true });
-    const logins = uniq(userNames).map(user => user.toLowerCase());
-    const loginChunks = chunk(logins, 20);
-    const channelChunks = await Promise.all(
-      loginChunks.map(async chunk => {
-        const responseStreams = await twitch.streams.get({ user_login: logins, first: 100 });
-        const responseUsers = await twitch.users.get({ login: logins });
-    
-        const streamByName = responseStreams.data.reduce<{ [key: string]: TwitchStream }>((map, stream) => {
-          map[stream.user_login] = stream;
-          return map;
-        }, {});
-        const userByName = responseUsers.data.reduce<{ [key: string]: TwitchUser }>((map, user) => {
+    const logins = displayNames.map(displayName => displayName.toLowerCase());
+    const uniqueLogins = uniq(logins);
+    const uniqueLoginsChunks = chunk(uniqueLogins, 20);
+
+    const userStreamByLoginChunks = await Promise.all(
+      uniqueLoginsChunks.map<Promise<UserStreamByLogin[]>>(async uniqueLoginsChunk => {
+        const responseUsers = await twitch.users.get({ login: uniqueLoginsChunk });
+        const responseStreams = await twitch.streams.get({ user_login: uniqueLoginsChunk, first: 100 });
+
+        const userByLogin = responseUsers.data.reduce<{ [key: string]: TwitchUser }>((map, user) => {
           map[user.login] = user;
           return map;
         }, {});
+        const streamByLogin = responseStreams.data.reduce<{ [key: string]: TwitchStream }>((map, stream) => {
+          map[stream.user_login] = stream;
+          return map;
+        }, {});
 
-        return chunk
-          .map<Channel>(login => {
-            const stream: TwitchStream | undefined = streamByName[login];
-            const user = userByName[login];
-
-            let status: Channel['status'] = 'not-found';
-
-            if (Boolean(user)) {
-              status = 'offline';
-            }
-            if (Boolean(stream)) {
-              status = 'online';
-            }
-
-            return {
-              name: login,
-              status,
-              avatar: user?.profile_image_url ?? ImgUserNotFound,
-              game: stream?.game_name,
-              viewCount: stream?.viewer_count
-            };
-          });
+        return uniqueLoginsChunk.map(login => ({
+          [login]: {
+            user: userByLogin[login],
+            stream: streamByLogin[login]
+          }
+        }));
       })
     );
 
-    const channels = flatten(channelChunks);
+    const userStreamByLogin: UserStreamByLogin = merge({}, ...flatten(userStreamByLoginChunks));
+    const channels = logins
+      .map<Channel>(login => {
+        const { user, stream } = userStreamByLogin[login];
+
+        let status: Channel['status'] = 'not-found';
+
+        if (Boolean(user)) {
+          status = 'offline';
+        }
+        if (Boolean(stream)) {
+          status = 'online';
+        }
+
+        return {
+          name: login,
+          status,
+          avatar: user?.profile_image_url ?? ImgUserNotFound,
+          game: stream?.game_name,
+          viewCount: stream?.viewer_count
+        };
+      });
+
     this.setState({ channels, loading: false });
+  }
+
+  removeChannel(index: number) {
+    this.setState({
+      channels: this.state.channels.filter((_, i) => i !== index)
+    });
   }
 
   getOnlineChannels() {
