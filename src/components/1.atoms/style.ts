@@ -16,6 +16,10 @@ const breakpoint = {
 type ColorType = {
   on: string;
   background: string;
+  hover?: {
+    on: string;
+    background: string;
+  }
 };
 
 export type StyleType = {
@@ -90,12 +94,20 @@ export const Style: StyleType = {
   },
   color: {
     primary: {
-      on: 'steelblue',
-      background: 'whtie'
+      on: 'white',
+      background: '#9147ff',
+      hover: {
+        on: 'white',
+        background: '#772ce8',
+      }
     },
     secondary: {
-      on: '#94d2bd',
-      background: 'whtie'
+      on: '#efeff1',
+      background: '#323234',
+      hover: {
+        on: '#efeff1',
+        background: '#3e3e40',
+      }
     },
     success: {
       on: 'limagreen',
@@ -143,21 +155,22 @@ type SpaceDualType = keyof StyleType['space']
 type SpaceUnitType = keyof StyleType['space'];
 
 export type StyleCommon = {
-  d?: CSSProperties['display'];
-  m?: SpaceType;
-  mx?: SpaceDualType;
-  my?: SpaceDualType;
-  mt?: SpaceUnitType;
-  mb?: SpaceUnitType;
-  ml?: SpaceUnitType;
-  mr?: SpaceUnitType;
-  p?: SpaceType;
-  px?: SpaceDualType;
-  py?: SpaceDualType;
-  pt?: SpaceUnitType;
-  pb?: SpaceUnitType;
-  pl?: SpaceUnitType;
-  pr?: SpaceUnitType;
+  readonly d?: CSSProperties['display'];
+  readonly m?: SpaceType;
+  readonly mx?: SpaceDualType;
+  readonly my?: SpaceDualType;
+  readonly mt?: SpaceUnitType;
+  readonly mb?: SpaceUnitType;
+  readonly ml?: SpaceUnitType;
+  readonly mr?: SpaceUnitType;
+  readonly p?: SpaceType;
+  readonly px?: SpaceDualType;
+  readonly py?: SpaceDualType;
+  readonly pt?: SpaceUnitType;
+  readonly pb?: SpaceUnitType;
+  readonly pl?: SpaceUnitType;
+  readonly pr?: SpaceUnitType;
+  readonly color?: keyof StyleType['color'];
 }
 
 const handleDisplay = (props: StyleCommon) => {

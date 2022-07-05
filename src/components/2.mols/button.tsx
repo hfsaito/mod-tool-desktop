@@ -1,9 +1,11 @@
 import styled from "styled-components";
 
-export const Button = styled.button`
-  background-color: #323234;
+import { Style, StyleCommon } from "@components/1.atoms";
+
+export const Button = styled.button<StyleCommon>`
+  color: ${({ color }) => Style.color[color ?? 'secondary'].on};
+  background-color: ${({ color }) => Style.color[color ?? 'secondary'].background};
   border: none;
-  color: #efeff1;
   font-family: Inter, Roobert, "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -13,6 +15,7 @@ export const Button = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: #3e3e40;
+    color: ${({ color }) => Style.color[color ?? 'secondary'].hover?.on};
+    background-color: ${({ color }) => Style.color[color ?? 'secondary'].hover?.background};
   }
 `;

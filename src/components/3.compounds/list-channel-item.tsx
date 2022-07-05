@@ -6,7 +6,15 @@ import { Channel, displayNumber } from "@utils";
 import { gankListStore, useStore } from "@stores";
 
 
-const Container = styled.a`
+const Container = styled.div<{status: Channel['status']}>`
+  display: flex;
+  order: ${({ status }) => ({
+    'not-found': 1,
+    online: 2,
+    offline: 3
+  }[status])};
+`;
+const ContainerChannel = styled.a`
   display: flex;
   padding: 5px 10px;
   width: 240px;
@@ -26,20 +34,24 @@ const Container = styled.a`
     text-decoration: none;
   }
 `;
-const Container2 = styled.div`
+const ContainerChannelInfo = styled.div`
   display: flex;
   justify-content: space-between;
   width: calc(100% - 30px);
 `;
-const Container3 = styled.div`
+const ContainerChannelNameGame = styled.div`
   margin-left: 10px;
   overflow: hidden;
 `;
-const Container4 = styled.div``;
-const Container5 = styled.div`
+const ContainerDetails = styled.div`
   display: flex;
   align-items: center;
 `;
+const ContainerActions = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Avatar = styled.img<{status: Channel['status']}>`
   width: 30px;
   height: 30px;
@@ -88,18 +100,7 @@ const Detail = styled.p`
   margin: 0;
   margin-left: 5px;
 `;
-const Container6 = styled.div<{status: Channel['status']}>`
-  display: flex;
-  order: ${({ status }) => ({
-    'not-found': 1,
-    online: 2,
-    offline: 3
-  }[status])};
-`;
-const ActionsContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
+
 
 interface ListChannelItemProps {
   channel: Channel;
@@ -118,27 +119,27 @@ export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel, index
   const remove = React.useCallback(() => gankListStore.removeChannel(index), [index]);
 
   return (
-    <Container6 status={channel.status}>
-      <Container href={`https://twitch.tv/${channel.name}`} target='_blank'>
+    <Container status={channel.status}>
+      <ContainerChannel href={`https://twitch.tv/${channel.name}`} target='_blank'>
         <Avatar src={channel.avatar} status={channel.status} />
-        <Container2>
-          <Container3>
+        <ContainerChannelInfo>
+          <ContainerChannelNameGame>
             <Name>
               {channel.name}
             </Name>
             <Game>
               {channel.game}
             </Game>
-          </Container3>
-          <Container4>
-            <Container5>
+          </ContainerChannelNameGame>
+          <div>
+            <ContainerDetails>
               {channel.status === 'online' && <Status />}
               <Detail>{detail}</Detail>
-            </Container5>
-          </Container4>
-        </Container2>
-      </Container>
-      <ActionsContainer>
+            </ContainerDetails>
+          </div>
+        </ContainerChannelInfo>
+      </ContainerChannel>
+      <ContainerActions>
         <HSpace />
         <Button onClick={remove}>
           Remove
@@ -146,13 +147,13 @@ export const ListChannelItem: React.FC<ListChannelItemProps> = ({ channel, index
         <HSpace />
         {channel.status === 'online' && (
           <>
-            <Button>
-              Raid
+            <Button color='primary'>
+              Copy "/raid {channel.name}"
             </Button>
             <HSpace />
           </>
         )}
-      </ActionsContainer>
-    </Container6>
+      </ContainerActions>
+    </Container>
   );
 }

@@ -23,6 +23,10 @@ class GankListStore extends Store<ExampleState> {
   async setChannels(displayNames: string[]) {
     this.setState({ loading: true });
     const logins = displayNames.map(displayName => displayName.toLowerCase());
+    const displayNameByLogin = displayNames.reduce<{ [key: string]: string }>((map, displayName) => {
+      map[displayName.toLowerCase()] = displayName;
+      return map;
+    }, {})
     const uniqueLogins = uniq(logins);
     const uniqueLoginsChunks = chunk(uniqueLogins, 20);
 
@@ -64,7 +68,7 @@ class GankListStore extends Store<ExampleState> {
         }
 
         return {
-          name: login,
+          name: displayNameByLogin[login],
           status,
           avatar: user?.profile_image_url ?? ImgUserNotFound,
           game: stream?.game_name,
