@@ -7,7 +7,7 @@ export const Container = styled.div<StyleCommon>`
   width: 100%;
 
   @media ${Style.device.laptopL} {
-    max-width: ${Style.breakpoint.laptopL}px;
+    max-width: ${Style.breakpoint.tablet}px;
   }
   
   ${handleStyleCommon}

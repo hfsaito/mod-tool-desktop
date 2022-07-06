@@ -4,14 +4,14 @@ import { StoreContext } from "./context";
 import { Store } from './store';
 
 type StoreProviderProps = {
-  stores: Store<any>[]
+  stores: Store<unknown>[]
 };
 
 export const StoreProvider: React.FC<StoreProviderProps> = props => {
   return (
     <StoreContext.Consumer>
       {parentMap  => {
-        let childMap = new Map(parentMap);
+        const childMap = new Map(parentMap);
 
         if (props.stores) {
           props.stores.forEach(store => {

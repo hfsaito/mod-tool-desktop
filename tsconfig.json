@@ -1,28 +1,27 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "jsx": "react",
     "module": "commonjs",
-    "target": "es3",
     "outDir": "./dist",
-    "rootDir": "./src",
-    "removeComments": true,
-    "strict": true,
     "noImplicitAny": true,
-    "strictNullChecks": true,
-    "baseUrl": "src",
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
     "paths": {
-      "@apis": ["apis"],
-      "@apis/*": ["apis/*"],
-      "@assets": ["assets"],
-      "@assets/*": ["assets/*"],
-      "@components": ["components"],
-      "@components/*": ["components/*"],
-      "@pages": ["pages"],
-      "@pages/*": ["pages/*"],
-      "@stores": ["stores"],
-      "@stores/*": ["stores/*"],
-      "@utils": ["utils"],
-      "@utils/*": ["utils/*"]
+      "@apis": ["src/apis"],
+      "@apis/*": ["src/apis/*"],
+      "@assets": ["src/assets"],
+      "@assets/*": ["src/assets/*"],
+      "@components": ["src/components"],
+      "@components/*": ["src/components/*"],
+      "@pages": ["src/pages"],
+      "@pages/*": ["src/pages/*"],
+      "@stores": ["src/stores"],
+      "@stores/*": ["src/stores/*"],
+      "@utils": ["src/utils"],
+      "@utils/*": ["src/utils/*"],
+      "*": ["node_modules/*"]
     },
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -32,8 +31,5 @@
     "strictPropertyInitialization": false,
     "sourceMap": true,
   },
-  "exclude": [
-    "node_modules",
-    "electron"
-  ]
+  "include": ["src/**/*"]
 }
